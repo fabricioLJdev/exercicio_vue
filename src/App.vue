@@ -1,47 +1,61 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { reactive } from 'vue';
+import Cabecalho from './components/Cabecalho.vue';
+import Calculadora from './components/Calculadora.vue';
+import Rodape from './components/Rodape.vue';
+
+const estado = reactive({
+  valor1: 0,
+  valor2: 0,
+  resultado: 0,
+  calculo: 'somar',
+})
+
+function getValor1(evento) {
+  estado.valor1 = evento.target.value;
+  if (estado.valor1 == '') {
+    estado.valor1 = 0;
+  }
+  estado.valor1 = parseFloat(estado.valor1)
+  getCalculo();
+}
+
+function getValor2(evento) {
+  estado.valor2 = evento.target.value;
+  if (estado.valor2 == '') {
+    estado.valor2 = 0;
+  }
+  estado.valor2 = parseFloat(estado.valor2)
+  getCalculo();
+}
+
+function getOperador(evento) {
+  estado.calculo = evento.target.value;
+  getCalculo();
+}
+
+const getCalculo = () => {
+  switch (estado.calculo) {
+    case 'subtrair':
+      return estado.resultado = (estado.valor1 - estado.valor2);
+    case 'somar':
+      return estado.resultado = (estado.valor1 + estado.valor2);
+    case 'dividir':
+      if (estado.valor2 == 0) {
+        return estado.resultado = "Undefined";
+      }
+      return estado.resultado = (estado.valor1 / estado.valor2);
+    case 'multiplicar':
+      return estado.resultado = (estado.valor1 * estado.valor2);
+  }
+}
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="container">
+    <Cabecalho />
+    <Calculadora :get-valor1="getValor1" :get-valor2="getValor2" :resultado="estado.resultado" :get-calculo="getOperador"/>
+    <Rodape />
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
